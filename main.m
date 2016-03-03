@@ -1,14 +1,29 @@
 function [ tPos tNeg fPos fNeg ] = main( FEOptions, COptions, trainingDir, testingDir )
+%% Setup
+
+% Get the name and dir of the log file.
+logFile = strrep(datetime, ' ', '_');
+logFile = ['logs\' logFile];
+
+
+% Get the training set.
+[TrainingImages, TrainingLabels] = getTrainingSet('inputs\images\');
 
 %% Training
-% Get all the training images.
 
-disp('Loading Training Images - Positive');
-trainingImagesPos = getImages('inputs\images\pos\');
+% Perform feature extraction.
+switch FEOptions(1)
+    case 'raw'
+        Features = rawpixel(TrainingImages);
+end
 
-disp('Loading Training Images - Negative');
-trainingImagesNeg = getImages('inputs\images\neg\');
+% Train the model.
+switch COptions(1)
+    case 'kNN'
+        Model = Features;
+end
 
+%% Testing
 
 
 end
