@@ -41,6 +41,7 @@ TestImages = getImages('inputs\pedestrian\');
 % objects with a confidence metric.
 for i=1:size(TestImages,4)
     Objects = slidingWindow(TestImages(:,:,:,i), validationFunc);
+    ShowDetectionResult(TestImages(:,:,:,i), Objects);
 end
 end
 
