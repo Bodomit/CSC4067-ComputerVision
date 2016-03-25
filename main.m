@@ -26,9 +26,22 @@ end
 % Train the model.
 classifierMethod = COptions(1);
 switch classifierMethod{:}
+    
     case 'kNN'
+        %Parse the k from the input if available.
+        if(size(COptions, 2) > 1)
+            k = COptions(2);
+            k = k{:};
+        else
+            k = 3;
+        end
+        
         Model = TrainingFeatures;
-        validationFunc = @(X) KNNTest(Model, TrainingLabels, X, 3);
+        validationFunc = @(X) KNNTest(Model, TrainingLabels, X, k);
+    
+    case 'svm'
+        Model = SVMTraining(TrainingFeatures, TrainingLabels);
+        validationFunc = @(X) SVMTesting(Model, X);
 end
 
 %% Testing
