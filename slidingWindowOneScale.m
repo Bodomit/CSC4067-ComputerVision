@@ -1,7 +1,7 @@
-function [x,y, confi]=slidingWindowOneScale( x, y, Scale, Image, w,h, featureExtractionFunc, validationFunc)
+function [x,y, confi]=slidingWindowOneScale( x, y, Image, w, h, featureExtractionFunc, validationFunc)
 
 % Preallocate the matrix.
-Windows = zeros(160, 96, 3, size(x,1));
+Windows = uint8(zeros(160, 96, 3, size(x,1)));
 
 % Preform the validation function at every point.
 for i=1:size(x, 1)
@@ -9,7 +9,7 @@ for i=1:size(x, 1)
     Window = Image(y(i):y(i)+h - 1, x(i):x(i)+w - 1, :);
     
     % Resize to be the same size as the training images, and store.
-    Windows(:,:,:,i) = imresize(Window, 1 / Scale);
+    Windows(:,:,:,i) = imresize(Window, [160, 96]);
 end
 
 % Get the confidence from the validation function.

@@ -1,10 +1,7 @@
-function [confidence]= SVMTesting(features,model)
+function [confidence]= SVMTesting(model,features)
 
-pred = predict(model, features);
-if pred>0
-    confidence = 1;
-else
-    confidence = 0;
-end
-   
+[pred, score]= predict(model, features);
+
+confidence = score(:, 2);
+
 end

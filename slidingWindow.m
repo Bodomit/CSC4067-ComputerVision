@@ -38,12 +38,7 @@ itt=ceil(log(1/StartScale)/log(Options.ScaleUpdate));
 % Do the Objection detection, looping through all image scales
 for i=1:itt
     % Current scale
-    Scale =StartScale*Options.ScaleUpdate^(i-1);    
-    
-    % Display the current scale and number of objects detected
-    if(Options.Verbose)
-        disp(['Scale : ' num2str(Scale) ' objects detected : ' num2str(n) ])
-    end
+    Scale =StartScale*Options.ScaleUpdate^(i-1);
     
     % Window size scales, with decreasing search-scale
     % (instead of cpu-intensive scaling of the image and calculation 
@@ -64,7 +59,7 @@ for i=1:itt
     if(isempty(x)), continue; end
     
     % Check each window and get a confidence value.
-    [x,y, confi] = slidingWindowOneScale( x, y, Scale, Image, w,h, featureExtractionFunc, validationFunc);
+    [x,y, confi] = slidingWindowOneScale( x, y, Image, w,h, featureExtractionFunc, validationFunc);
     
     % Filter out any window less than 50% confidence (as it's a validation
     % / binary problem).
@@ -72,6 +67,11 @@ for i=1:itt
     x = x(ids);
     y = y(ids);
     confi = confi(ids);
+   
+    % Display the current scale and number of objects detected
+    if(Options.Verbose)
+        disp(['Scale : ' num2str(Scale) ' objects detected : ' num2str(n) ])
+    end
     
     % If search coordinates still exist, they contain an Object
     for k=1:length(x)

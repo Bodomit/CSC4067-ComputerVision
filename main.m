@@ -21,6 +21,9 @@ switch feMethod{:}
     case 'raw'
         TrainingFeatures = rawpixel(TrainingImages);
         featureExtractionFunc = @(X) rawpixel(X);
+    case 'hog'
+        TrainingFeatures = hog(TrainingImages);
+        featureExtractionFunc = @(X) hog(X);
 end
 
 % Train the model.
