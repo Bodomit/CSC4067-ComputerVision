@@ -1,4 +1,4 @@
-function [ Objects ] = slidingWindow(Image, validationFunc)
+function [ Objects ] = slidingWindow(Image, featureExtractionFunc, validationFunc)
 
 % The default Options
 defaultoptions=struct('ScaleUpdate',1/1.2,'Resize',true,'Verbose',true);
@@ -64,7 +64,7 @@ for i=1:itt
     if(isempty(x)), continue; end
     
     % Check each window and get a confidence value.
-    [x,y, confi] = slidingWindowOneScale( x, y, Scale, Image, w,h, validationFunc);
+    [x,y, confi] = slidingWindowOneScale( x, y, Scale, Image, w,h, featureExtractionFunc, validationFunc);
     
     % Filter out any window less than 50% confidence (as it's a validation
     % / binary problem).
