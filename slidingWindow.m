@@ -48,8 +48,8 @@ for i=1:itt
     h = floor(WindowRatioHeight*Scale);
 
     % Spacing between search coordinates of the image.
-    stepH = round(w/2);
-    stepV = round(h/2);
+    stepH = round(w/4);
+    stepV = round(h/4);
     
     % Make vectors with all search image coordinates used for the current scale
     [x,y]=ndgrid(1:stepH:(size(Image, 2)-w),1:stepV:(size(Image, 1)-h)); 
