@@ -13,6 +13,9 @@ mkdir(resultsFolder);
 % Get the training set.
 [TrainingImages, TrainingLabels] = getTrainingSet('inputs\images\');
 
+% Preprocess the training images.
+TrainingImages = preProcess(TrainingImages);
+
 %% Training
 
 % Perform feature extraction.
@@ -50,11 +53,12 @@ end
 %% Testing
 % Get the test set consisting of images of a street.
 TestImages = getImages('inputs\pedestrian\');
+ProcessedTestImages = preProcess(TestImages);
 
 % Loop through each test image, performing a sliding window and return all
 % objects with a confidence metric.
 for i=1:size(TestImages,4)
-    Objects = slidingWindow(TestImages(:,:,:,i), featureExtractionFunc, validationFunc);
+    Objects = slidingWindow(ProcessedTestImages(:,:,:,i), featureExtractionFunc, validationFunc);
     Objects = suppressNonMaxima(Objects, 100);
     ShowDetectionResult(TestImages(:,:,:,i), Objects);
 end
