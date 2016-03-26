@@ -30,7 +30,8 @@ else
 end
 
 % Array to store [x y width height confidence] of Objects detected
-Objects=zeros(100,5); n=0; 
+Objects=zeros(100,5); 
+n=0; 
 
 % Calculate maximum of search scale itterations
 itt=ceil(log(1/StartScale)/log(Options.ScaleUpdate));
@@ -47,8 +48,8 @@ for i=1:itt
     h = floor(WindowRatioHeight*Scale);
 
     % Spacing between search coordinates of the image.
-    stepH = w;
-    stepV = h;
+    stepH = round(w/2);
+    stepV = round(h/2);
     
     % Make vectors with all search image coordinates used for the current scale
     [x,y]=ndgrid(1:stepH:(size(Image, 2)-w),1:stepV:(size(Image, 1)-h)); 
