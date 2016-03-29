@@ -13,12 +13,15 @@ mkdir(resultsFolder);
 % Get the matrix of correct objects from the dataset.
 dataString = fileread('inputs\test.dataset');
 TestAnswers = parseTestAnswers(dataString);
+save([resultsFolder 'TestAnswers.mat'], 'TestAnswers');
 
 % Get the training set.
 [TrainingImages, TrainingLabels] = getTrainingSet('inputs\images\');
 
 % Preprocess the training images.
-TrainingImages = preProcess(TrainingImages);
+ProcessedTrainingImages = preProcess(TrainingImages);
+
+save([resultsFolder 'TrainingImages.mat'], 'TrainingImages', 'TrainingLabels', 'ProcessedTrainingImages');
 
 %% Training
 
@@ -26,12 +29,14 @@ TrainingImages = preProcess(TrainingImages);
 feMethod = FEOptions(1);
 switch feMethod{:}
     case 'raw'
-        TrainingFeatures = rawpixel(TrainingImages);
+        TrainingFeatures = rawpixel(ProcessedTrainingImages);
         featureExtractionFunc = @(X) rawpixel(X);
     case 'hog'
-        TrainingFeatures = hog(TrainingImages);
+        TrainingFeatures = hog(ProcessedTrainingImages);
         featureExtractionFunc = @(X) hog(X);
 end
+save([resultsFolder 'TrainingFeatures.mat'], 'TrainingFeatures');
+
 
 % Train the model.
 classifierMethod = COptions(1);
@@ -54,10 +59,13 @@ switch classifierMethod{:}
         validationFunc = @(X) SVMTesting(Model, X);
 end
 
+save([resultsFolder 'Model.mat'], 'Model');
+
 %% Testing
 % Get the test set consisting of images of a street.
 TestImages = getImages('inputs\pedestrian\');
 ProcessedTestImages = preProcess(TestImages);
+save([resultsFolder 'TestImages.mat'], 'TestImages', 'ProcessedTestImages');
 
 % Preallocate arrays.
 tPos = zeros(size(TestImages,4),1);
