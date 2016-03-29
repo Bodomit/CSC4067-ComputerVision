@@ -1,4 +1,4 @@
-function [ tPos tNeg fPos fNeg ] = main( FEOptions, COptions)
+function [ tPos, tNeg, fPos, fNeg ] = main( FEOptions, COptions)
 % Call like "main({'raw'}, {'kNN'});" in the cmd window... Don't ask about
 % the syntax.
 
@@ -11,7 +11,7 @@ resultsFolder = ['results\' resultsFolder '\'];
 mkdir(resultsFolder);
 
 % Get the matrix of correct objects from the dataset.
-dataString = fileread('test.dataset');
+dataString = fileread('inputs\test.dataset');
 TestAnswers = parseTestAnswers(dataString);
 
 % Get the training set.
@@ -71,15 +71,16 @@ for i=1:size(TestImages,4)
     % Find objects.
     [Objects, windowCount] = slidingWindow(ProcessedTestImages(:,:,:,i), featureExtractionFunc, validationFunc);
     Objects = suppressNonMaxima(Objects, 100);
+    Objects = centerOrigin(Objects);
     
-    [ tPosi, tNegi, fPosi, fNegi, ] = calculateBaseMetrics(Objects, TestAnswers{i}, windowCount);
+    [ tPos(i), tNeg(i), fPos(i), fNeg(i) ] = calculateBaseMetrics(Objects(1:4), TestAnswers{i}, windowCount, 10);
     
-    tPos(i) = tPosi;
-    tNeg(i) = tNegi;
-    fPos(i) = fPosi;
-    fNeg(i) = fNegi;
+    % Get the correct answers and add to the list of objects for display.
+    answers = cell2mat(TestAnswers{i}.');
+    answers = [answers ones(size(answers,1), 1)*-1];
+    Objects = [Objects; answers];
     
-    ShowDetectionResult(TestImages(:,:,:,i), Objects);
+    ShowDetectionResult(TestImages(:,:,:,i), Objects, ['b';'c';'m';'y';'g']);
 end
 end
 
