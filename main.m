@@ -34,6 +34,10 @@ switch feMethod{:}
     case 'hog'
         TrainingFeatures = hog(ProcessedTrainingImages);
         featureExtractionFunc = @(X) hog(X);
+    case 'PCA'
+        %Think output values of PCA function won't work correctly here
+        %TrainingFeatures = principalComponentAnalysis(ProcessedTrainingImages);
+        %featureExtractionFunc = @(X) hog(X);
 end
 save([resultsFolder 'TrainingFeatures.mat'], 'TrainingFeatures');
 
