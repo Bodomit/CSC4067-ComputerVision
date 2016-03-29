@@ -6,7 +6,9 @@ function [eigenVectors, eigenvalues, meanX, Xpca] = PrincipalComponentAnalysis (
 meanX = mean(X);
 
 %subtract mean to each sample
-A= X - meanX;
+for i=1:size(X,1)
+    A(i,:)= X(i,:) - meanX;
+end
 
 % calculate covariance of the previous matrix
 S = transpose(A)*A;
