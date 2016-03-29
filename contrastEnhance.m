@@ -11,7 +11,7 @@ L = Image_lab(:,:,1);
 % replace the luminosity layer with the processed data and then convert
 % the image back to the RGB colorspace
 Image_enhanced = Image_lab;
-Image_enhanced(:,:,1) = adapthisteq(L);
+Image_enhanced(:,:,1) = histeq(L);
 Image = applycform(Image_enhanced, lab2srgb);
 
 end
