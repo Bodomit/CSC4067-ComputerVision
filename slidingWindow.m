@@ -1,4 +1,4 @@
-function [ Objects ] = slidingWindow(Image, featureExtractionFunc, validationFunc)
+function [ Objects, windowCount ] = slidingWindow(Image, featureExtractionFunc, validationFunc)
 
 % The default Options
 defaultoptions=struct('ScaleUpdate',1/1.2,'Resize',true,'Verbose',true);
@@ -32,6 +32,7 @@ end
 % Array to store [x y width height confidence] of Objects detected
 Objects=zeros(100,5); 
 n=0; 
+windowCount=0;
 
 % Calculate maximum of search scale itterations
 itt=ceil(log(1/StartScale)/log(Options.ScaleUpdate));
@@ -61,6 +62,7 @@ for i=1:itt
     
     % Check each window and get a confidence value.
     [x,y, confi] = slidingWindowOneScale( x, y, Image, w,h, featureExtractionFunc, validationFunc);
+    windowCount = windowCount + size(x, 1);
     
     % Filter out any window less than 50% confidence (as it's a validation
     % / binary problem).

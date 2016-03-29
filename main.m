@@ -59,11 +59,26 @@ end
 TestImages = getImages('inputs\pedestrian\');
 ProcessedTestImages = preProcess(TestImages);
 
+% Preallocate arrays.
+tPos = zeros(size(TestImages,4),1);
+tNeg = zeros(size(TestImages,4),1);
+fPos = zeros(size(TestImages,4),1);
+fNeg = zeros(size(TestImages,4),1);
+
 % Loop through each test image, performing a sliding window and return all
 % objects with a confidence metric.
 for i=1:size(TestImages,4)
-    Objects = slidingWindow(ProcessedTestImages(:,:,:,i), featureExtractionFunc, validationFunc);
+    % Find objects.
+    [Objects, windowCount] = slidingWindow(ProcessedTestImages(:,:,:,i), featureExtractionFunc, validationFunc);
     Objects = suppressNonMaxima(Objects, 100);
+    
+    [ tPosi, tNegi, fPosi, fNegi, ] = calculateBaseMetrics(Objects, TestAnswers{i}, windowCount);
+    
+    tPos(i) = tPosi;
+    tNeg(i) = tNegi;
+    fPos(i) = fPosi;
+    fNeg(i) = fNegi;
+    
     ShowDetectionResult(TestImages(:,:,:,i), Objects);
 end
 end
