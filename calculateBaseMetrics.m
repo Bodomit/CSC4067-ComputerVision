@@ -10,13 +10,13 @@ for i=1:1:size(Objects,1)
         hMargin = Objects(i,3) * marginPercent / 100;
         vMargin = Objects(i,4) * marginPercent / 100;
         
-        O = repmat(Objects, size(TestAnswers, 1), 1);
+        O = repmat(Objects(i,1:4), size(TestAnswers, 1), 1);
         
-        withinVMargin = TestAnswers(:,1)-vMargin < O & O < TestAnswers(:,1)+vMargin;
-        withinHMargin = TestAnswers(:,2)-hMargin < O & O < TestAnswers(:,2)+hMargin;
+        withinVMargin = TestAnswers(:,2)-vMargin < O(:,2) & O(:,2) < TestAnswers(:,2)+vMargin;
+        withinHMargin = TestAnswers(:,1)-hMargin < O(:,1) & O(:,1) < TestAnswers(:,1)+hMargin;
         
         matchFound = withinVMargin & withinHMargin;
-        tPos = tPos + sum(matchFound);
+        tPos = tPos + any(matchFound);
 end
 
 % Calculate the false positives.

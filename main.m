@@ -73,7 +73,7 @@ for i=1:size(TestImages,4)
     Objects = suppressNonMaxima(Objects, 100);
     Objects = centerOrigin(Objects);
     
-    [ tPos(i), tNeg(i), fPos(i), fNeg(i) ] = calculateBaseMetrics(Objects(1:4), TestAnswers{i}, windowCount, 10);
+    [ tPos(i), tNeg(i), fPos(i), fNeg(i) ] = calculateBaseMetrics(Objects, TestAnswers{i}, windowCount, 10);
     
     % Get the correct answers and add to the list of objects for display.
     answers = cell2mat(TestAnswers{i}.');
