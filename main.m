@@ -10,6 +10,10 @@ resultsFolder = strrep(resultsFolder, ':', '-');
 resultsFolder = ['results\' resultsFolder '\'];
 mkdir(resultsFolder);
 
+% Get the matrix of correct objects from the dataset.
+dataString = fileread('test.dataset');
+TestAnswers = parseTestAnswers(dataString);
+
 % Get the training set.
 [TrainingImages, TrainingLabels] = getTrainingSet('inputs\images\');
 
