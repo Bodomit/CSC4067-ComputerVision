@@ -57,6 +57,10 @@ switch classifierMethod{:}
     case 'svm'
         Model = SVMTraining(TrainingFeatures, TrainingLabels);
         validationFunc = @(X) SVMTesting(Model, X);
+        
+    case 'neural'
+        Model = neuralNetTraining(TrainingFeatures, TrainingLabels);
+        validationFunc = @(X) neuralNetTest(Model, X);
 end
 
 save([resultsFolder 'Model.mat'], 'Model');
