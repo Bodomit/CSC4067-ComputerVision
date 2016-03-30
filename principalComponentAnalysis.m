@@ -1,4 +1,4 @@
-function [eigenVectors, eigenvalues, meanX, Xpca] = PrincipalComponentAnalysis (X, ndim)
+function [Xpca] = PrincipalComponentAnalysis (X, ndim)
 %X is a atrix conatining all the training samples
 % the dimenison are: number_of_Samples x number_of_features
 
