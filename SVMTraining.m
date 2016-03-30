@@ -1,7 +1,5 @@
 function model = SVMTraining(features, labels)
 
-rng('default');
-
 %SVM software requires labels -1 or 1 for the binary problem
 labels(labels==0)=-1;
 

@@ -1,4 +1,4 @@
-function ShowDetectionResult(Picture,Objects, colours)
+function ShowDetectionResult(Picture,Objects, colours, imageNum ,resultsFolder)
 %  ShowDetectionResult(Picture,Objects)
 %
 %
@@ -7,7 +7,7 @@ function ShowDetectionResult(Picture,Objects, colours)
 Objects = resetOrigin(Objects);
     
 % Show the picture
-figure(1),
+f = figure(1);
 imshow(Picture), hold on;
 % Show the detected objects
 if(~isempty(Objects));
@@ -32,5 +32,8 @@ if(~isempty(Objects));
     end
 end
 drawnow
+
+saveas(f, [resultsFolder 'images\' imageNum '.png']);
+
 end
 

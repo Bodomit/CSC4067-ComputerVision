@@ -1,7 +1,5 @@
 function [ Model ] = neuralNetTraining( TrainingFeatures, Labels )
 
-rng('default');
-
 TrainingFeatures = TrainingFeatures.';
 Labels = Labels.';
 

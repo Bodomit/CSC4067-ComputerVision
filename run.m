@@ -1,8 +1,11 @@
+rng(1);
+
 % Get the name and dir of the results file.
 resultsFolder = strrep(datestr(datetime), ' ', '_');
 resultsFolder = strrep(resultsFolder, ':', '-');
 resultsFolder = ['results\' resultsFolder '\'];
 mkdir(resultsFolder);
+mkdir([resultsFolder 'images\']);
 
 % Configure the options.
 FEOptions = {'hog'};
