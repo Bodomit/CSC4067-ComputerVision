@@ -9,4 +9,4 @@ labels(labels==0)=-1;
 model = fitcsvm(features, labels,'KernelScale', 'auto', 'KernelFunction','rbf','ClassNames',[-1,1], 'CrossVal', 'on', 'Standardize', true,'BoxConstraint', Inf);
 
 % Wrap so posterior probablities are returned in score.
-model = fitSVMPosterior(model, features, labels);
+model = fitSVMPosterior(model);
