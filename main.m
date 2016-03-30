@@ -1,15 +1,8 @@
-function [ tPos, tNeg, fPos, fNeg ] = main( FEOptions, COptions)
+function [ tPos, tNeg, fPos, fNeg ] = main(FEOptions, COptions, resultsFolder)
 % Call like "main({'raw'}, {'kNN'});" in the cmd window... Don't ask about
 % the syntax.
 
 %% Setup
-
-% Get the name and dir of the results file.
-resultsFolder = strrep(datestr(datetime), ' ', '_');
-resultsFolder = strrep(resultsFolder, ':', '-');
-resultsFolder = ['results\' resultsFolder '\'];
-mkdir(resultsFolder);
-
 % Get the matrix of correct objects from the dataset.
 dataString = fileread('inputs\test.dataset');
 TestAnswers = parseTestAnswers(dataString);
