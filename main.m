@@ -24,17 +24,24 @@ feMethod = FEOptions(1);
 switch feMethod{:}
     case 'raw'
         TrainingFeatures = rawpixel(ProcessedTrainingImages);
-        featureExtractionFunc = @(X) rawpixel(X);
+        featureExtractionFunc0 = @(X) rawpixel(X);
     case 'hog'
         TrainingFeatures = hog(ProcessedTrainingImages);
-        featureExtractionFunc = @(X) hog(X);
-    case 'pca'
-        %Think output values of PCA function won't work correctly here
-        TrainingFeatures = principalComponentAnalysis(ProcessedTrainingImages);
-        featureExtractionFunc = @(X) principalComponentAnalysis(X);
+        featureExtractionFunc0 = @(X) hog(X);
 end
-save([resultsFolder 'TrainingFeatures.mat'], 'TrainingFeatures');
 
+if(size(FEOptions, 2) > 1)
+    param = FEOptions(2);
+    switch param{:}
+        case '-pca'
+            [TrainingFeatures, eigenVectors] = pCA(TrainingFeatures);
+            featureExtractionFunc = @(X) pCAReduce(eigenVectors, featureExtractionFunc0(X));
+    end
+else
+    featureExtractionFunc = featureExtractionFunc0;
+end
+
+save([resultsFolder 'TrainingFeatures.mat'], 'TrainingFeatures');
 
 % Train the model.
 classifierMethod = COptions(1);
