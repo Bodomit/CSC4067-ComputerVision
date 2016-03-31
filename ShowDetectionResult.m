@@ -32,8 +32,7 @@ if(~isempty(Objects));
     end
 end
 drawnow
-
-saveas(f, [resultsFolder 'images\' imageNum '.png']);
+print([resultsFolder 'images\' imageNum '.jpg'], '-djpeg');
 
 end
 

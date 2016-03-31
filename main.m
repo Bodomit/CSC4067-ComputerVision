@@ -16,7 +16,6 @@ ProcessedTrainingImages = preProcess(TrainingImages);
 
 save([resultsFolder 'TrainingImages.mat'], 'TrainingImages', 'TrainingLabels', 'ProcessedTrainingImages');
 
-videoOut = VideoWriter([resultsFolder 'output.mp4'],'MPEG-4');
 
 %% Training
 
@@ -91,7 +90,7 @@ for i=1:size(TestImages,4)
     answers = [answers ones(size(answers,1), 1)*-1];
     Objects = [Objects; answers];
     
-    ShowDetectionResult(TestImages(:,:,:,i), Objects, ['b';'c';'m';'y';'g'], num2str(i), resultsFolder);
+    ShowDetectionResult(TestImages(:,:,:,i), Objects, ['b';'c';'m';'y';'g'], num2str(i, '%05u'), resultsFolder);
 end
 end
 
