@@ -1,0 +1,43 @@
+function [Xpca, eigenVectors] = pCA (X, ndim)
+% X is a atrix conatining all the training samples
+% the dimenison are: number_of_Samples x number_of_features
+
+% calculate mean over the samples
+meanX = repmat(mean(X, 2), [1 size(X,2)]);
+
+% subtract mean to each sample
+A = X - meanX;
+
+% calculate covariance of the previous matrix
+S = transpose(A)*A;
+
+% obtain eigenvalue & eigenvector
+[eigenVectors,D] = eig(S);
+eigenvalues = diag(D);
+% sort eigenvalues in descending order
+eigenvalues = eigenvalues(end:-1:1);
+eigenVectors = fliplr(eigenVectors);
+
+
+if nargin<2
+    % if the user does not tell us how many dimensions he wants:
+    % evaluate the number of principal components needed to represent 95% Total variance.
+    
+    eigsum = cumsum(eigenvalues);
+    eigsum = eigsum / eigsum(end);
+    
+    index = find(eigsum >= 0.95);
+    ndim = index(1);
+    
+end
+
+% return only the desired number of dimensions with the higher eignvalues
+% ( higher amount of information)
+eigenVectors = eigenVectors(:,1:ndim);
+eigenvalues = eigenvalues(1:ndim);
+
+
+% dataset transformed to the pca space:
+Xpca=A*eigenVectors;
+
+end
