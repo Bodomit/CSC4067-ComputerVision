@@ -51,17 +51,20 @@ switch classifierMethod{:}
         
         Model = TrainingFeatures;
         validationFunc = @(X) KNNTest(Model, TrainingLabels, X, k);
+        nmsThreshold = 500;
     
     case 'svm'
         Model = SVMTraining(TrainingFeatures, TrainingLabels);
         validationFunc = @(X) SVMTesting(Model, X);
+        nmsThreshold = 100;
         
     case 'neural'
         Model = neuralNetTraining(TrainingFeatures, TrainingLabels);
         validationFunc = @(X) neuralNetTest(Model, X);
+        nmsThreshold = 100;
 end
 
-save([resultsFolder 'Model.mat'], 'Model');
+save([resultsFolder 'Model.mat', 'nmsThreshold'], 'Model');
 
 %% Testing
 % Get the test set consisting of images of a street.
@@ -80,17 +83,17 @@ fNeg = zeros(size(TestImages,4),1);
 for i=1:size(TestImages,4)
     % Find objects.
     [Objects, windowCount] = slidingWindow(ProcessedTestImages(:,:,:,i), featureExtractionFunc, validationFunc);
-    Objects = suppressNonMaxima(Objects, 100);
-    Objects = centerOrigin(Objects);
     
+    Objects = centerOrigin(Objects);
+    Objects = suppressNonMaxima(Objects, nmsThreshold);
     [ tPos(i), tNeg(i), fPos(i), fNeg(i) ] = calculateBaseMetrics(Objects, TestAnswers{i}, windowCount, 10);
     
     % Get the correct answers and add to the list of objects for display.
     answers = cell2mat(TestAnswers{i}.');
     answers = [answers ones(size(answers,1), 1)*-1];
-    Objects = [Objects; answers];
+    Objects = [answers; Objects];
     
-    ShowDetectionResult(TestImages(:,:,:,i), Objects, ['b';'c';'m';'y';'g'], num2str(i, '%05u'), resultsFolder);
+    ShowDetectionResult(TestImages(:,:,:,i), Objects, ['g';'b'], num2str(i, '%05u'), resultsFolder);
 end
 end
 

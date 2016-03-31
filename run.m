@@ -1,3 +1,6 @@
+clear;
+close;
+
 rng(1);
 
 % Get the name and dir of the results file.
@@ -9,7 +12,7 @@ mkdir([resultsFolder 'images\']);
 
 % Configure the options.
 FEOptions = {'hog'};
-COptions = {'svm'};
+COptions = {'kNN', 3};
 save([resultsFolder 'Options.mat'], 'FEOptions', 'COptions');
 
 % Run the full training / testing.

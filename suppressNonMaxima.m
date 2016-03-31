@@ -7,11 +7,27 @@ for i=1:size(Objects, 1)
        continue;
    end
    
-   intersects = (rectint(Objects(i, 1:4), Objects(:, 1:4)) > threshold).';
+   intersects = (rectint(Objects(i, 1:4), Objects(:, 1:4)) > threshold).' & ~removed;
    lessConfid = Objects(i, 5) > Objects(:, 5);
    
    toRemove = intersects & lessConfid;
-   toRemove(i) = 0;
+   
+   sameConfiIntersects = intersects & Objects(i, 5) == Objects(:, 5);
+   
+   if(any(sameConfiIntersects))
+       % Get the average position.
+       avgPos = mean(Objects(sameConfiIntersects,1:2), 1);
+       
+       % Get the distance from all objects to the point.
+       distVectors = Objects(:, 1:2) - repmat(avgPos, size(sameConfiIntersects));
+       distances = sum(distVectors .^ 2, 2);
+       
+      [~,I] =  sort(distances);
+      
+      D = I(sameConfiIntersects(I));
+      
+      toRemove(D(2:end)) = 1;     
+   end
    
    removed = removed | toRemove;
 end

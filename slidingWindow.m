@@ -35,7 +35,7 @@ n=0;
 windowCount=0;
 
 % Calculate maximum of search scale itterations
-itt=ceil(log(1/StartScale)/log(Options.ScaleUpdate));
+itt=ceil(log(1/StartScale)/log(Options.ScaleUpdate))*1.2;
 
 % Do the Objection detection, looping through all image scales
 for i=1:itt

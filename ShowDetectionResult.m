@@ -17,15 +17,9 @@ if(~isempty(Objects));
         
         confidence = Objects(n,5)/ max(Objects(:,5));
         if confidence < 0
-            c=5;
-        elseif confidence > 0.8
             c=1;
-        elseif confidence> 0.5
-            c=2;
-        elseif confidence > 0.1
-            c=3;
         else
-            c=4;
+            c=2;
         end
         
         plot([x1 x1 x2 x2 x1],[y1 y2 y2 y1 y1],colours(c));
