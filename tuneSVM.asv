@@ -1,19 +1,19 @@
 %SVM software requires labels -1 or 1 for the binary problem
 TrainingLabels(TrainingLabels==0)=-1;
 
-CvLoss = zeros(7);
+CvLoss = zeros(11);
 
-for kernalScalePower = -3:1:3
+for kernalScalePower = -5:1:5
     kScale = 10 ^ kernalScalePower;
     
-    for boxConstraintPower = -3:1:3
+    for boxConstraintPower = -5:1:5
         C = 10 ^ boxConstraintPower;
         
         % Calculate the support vectors
         Model = fitcsvm(TrainingFeatures, TrainingLabels,'KernelScale',kScale,'KernelFunction','rbf','ClassNames',[-1,1], 'Standardize', true,'BoxConstraint', Inf);
 
         % Wrap so posterior probablities are returned in score.
-        psModel = fitSVMPosterior(Model);
+        psModel = fitSVMPosterior(CvModel);
 
         % Cross validate the model.
         cvModel = crossval(psModel);
@@ -29,4 +29,4 @@ for kernalScalePower = -3:1:3
     end
 end
 
-save('CvLoss.mat', 'CvLoss');
+save(', 'TrainingImages', 'TrainingLabels', 'ProcessedTrainingImages');
