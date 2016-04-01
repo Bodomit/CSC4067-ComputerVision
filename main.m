@@ -61,7 +61,7 @@ switch classifierMethod{:}
         
         Model = TrainingFeatures;
         disp('Cross validation.');
-        cvModel = fitcknn(TrainingFeatures, TrainingLabels, 'CrossVal', 'on'); 
+        cvModel = fitcknn(TrainingFeatures, TrainingLabels, 'CrossVal', 'on', 'NumNeighbors', k); 
         Loss = kfoldLoss(cvModel);
         
         validationFunc = @(X) KNNTest(Model, TrainingLabels, X, k);
@@ -73,10 +73,9 @@ switch classifierMethod{:}
         nmsThreshold = 100;
         
     case 'neural'
-        Model = neuralNetTraining(TrainingFeatures, TrainingLabels);
+        [Model, Loss] = neuralNetTraining(TrainingFeatures, TrainingLabels);
         validationFunc = @(X) neuralNetTest(Model, X);
         nmsThreshold = 100;
-end
 
 disp(['Loss: ' num2str(Loss)]);
 

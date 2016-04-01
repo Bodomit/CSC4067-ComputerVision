@@ -1,4 +1,4 @@
-function [ Model ] = neuralNetTraining( TrainingFeatures, Labels )
+function [Model, Loss] = neuralNetTraining( TrainingFeatures, Labels )
 
 TrainingFeatures = TrainingFeatures.';
 Labels = Labels.';
@@ -10,11 +10,8 @@ sparseLabels(2,:) = Labels == 1;
 
 % Train the first autoencoder using the images.
 auto1 = trainAutoencoder(TrainingFeatures,100, ...
-    'MaxEpochs', 500, ...
+    'MaxEpochs', 100, ...
     'L2WeightRegularization',0.01, ...
-    'EncoderTransferFunction','logsig',...
-    'DecoderTransferFunction','logsig',...
-    'SparsityProportion', 0.8, ...
     'ScaleData', true);
 
 features = encode(auto1,TrainingFeatures);
@@ -25,9 +22,11 @@ softnet = trainSoftmaxLayer(features, sparseLabels);
 
 % Stack them to form a deep net, which is our model.
 Model = stack(auto1, softnet);
-Model = train(Model, TrainingFeatures, TrainingLabels);
+[Model, tr] = train(Model, TrainingFeatures, sparseLabels);
 
 view(Model);
+
+Loss = cell2mat(tr.best_perf);
 
 end
 

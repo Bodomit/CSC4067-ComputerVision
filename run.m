@@ -11,8 +11,8 @@ mkdir(resultsFolder);
 mkdir([resultsFolder 'images\']);
 
 % Configure the options.
-FEOptions = {'raw'};
-COptions = {'svm'};
+FEOptions = {'hog'};
+COptions = {'neural'};
 save([resultsFolder 'Options.mat'], 'FEOptions', 'COptions');
 
 % Run the full training / testing.
