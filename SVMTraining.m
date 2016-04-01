@@ -4,7 +4,7 @@ function model = SVMTraining(features, labels, resultsFolder)
 labels(labels==0)=-1;
 
 % Calculate the support vectors
-model = fitcsvm(features, labels,'KernelFunction','rbf','ClassNames',{-1,1}, 'Standardize', true,'BoxConstraint', Inf);
+model = fitcsvm(features, labels,'KernelFunction','rbf','ClassNames',[-1,1], 'Standardize', true,'BoxConstraint', Inf);
 
 % Wrap so posterior probablities are returned in score.
 model = fitSVMPosterior(model);
