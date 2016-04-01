@@ -20,8 +20,8 @@ for kernalScalePower = -3:1:3
         [cvLabels, cvScore, cvCost] = kfoldPredict(cvModel);
         cvLoss = kfoldLoss(cvModel);
 
-        disp(['KScale: ' num2str(10^kernelScalePower)]);
-        disp(['C: ' num2str(10 ^ boxConstraintPower)]);
+        disp(['KScale: ' num2str(10^kernalScalePower)]);
+        disp(['C: ' num2str(10 ^ C)]);
         disp(['Loss: ' num2str(cvLoss)]);
         disp('');
     

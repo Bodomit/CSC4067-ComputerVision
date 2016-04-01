@@ -12,7 +12,7 @@ mkdir([resultsFolder 'images\']);
 
 % Configure the options.
 FEOptions = {'hog'};
-COptions = {'svm'};
+COptions = {'kNN'};
 save([resultsFolder 'Options.mat'], 'FEOptions', 'COptions');
 
 % Run the full training / testing.

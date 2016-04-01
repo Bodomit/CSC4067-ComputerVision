@@ -3,6 +3,8 @@ function [ tPos, tNeg, fPos, fNeg ] = main(FEOptions, COptions, resultsFolder)
 % the syntax.
 
 %% Setup
+disp('Getting training images.');
+
 % Get the matrix of correct objects from the dataset.
 dataString = fileread('inputs\test.dataset');
 TestAnswers = parseTestAnswers(dataString);
@@ -12,13 +14,14 @@ save([resultsFolder 'TestAnswers.mat'], 'TestAnswers');
 [TrainingImages, TrainingLabels] = getTrainingSet('inputs\images\');
 
 % Preprocess the training images.
+disp('Processing images.');
 ProcessedTrainingImages = preProcess(TrainingImages);
 
 save([resultsFolder 'TrainingImages.mat'], 'TrainingImages', 'TrainingLabels', 'ProcessedTrainingImages');
 
 
 %% Training
-
+disp('Training.');
 % Perform feature extraction.
 feMethod = FEOptions(1);
 switch feMethod{:}
@@ -57,11 +60,15 @@ switch classifierMethod{:}
         end
         
         Model = TrainingFeatures;
+        disp('Cross validation.');
+        cvModel = fitcknn(TrainingFeatures, TrainingLabels, 'CrossVal', 'on'); 
+        Loss = kfoldLoss(cvModel);
+        
         validationFunc = @(X) KNNTest(Model, TrainingLabels, X, k);
         nmsThreshold = 500;
     
     case 'svm'
-        Model = SVMTraining(TrainingFeatures, TrainingLabels, resultsFolder);
+        [Model, Loss] = SVMTraining(TrainingFeatures, TrainingLabels);
         validationFunc = @(X) SVMTesting(Model, X);
         nmsThreshold = 100;
         
@@ -71,7 +78,9 @@ switch classifierMethod{:}
         nmsThreshold = 100;
 end
 
-save([resultsFolder 'Model.mat', 'nmsThreshold'], 'Model');
+disp(['Loss: ' num2str(Loss)]);
+
+save([resultsFolder 'Model.mat'], 'Model', 'nmsThreshold', 'Loss');
 
 %% Testing
 % Get the test set consisting of images of a street.
