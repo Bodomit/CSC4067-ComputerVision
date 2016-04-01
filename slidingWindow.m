@@ -1,5 +1,7 @@
 function [ Objects, windowCount ] = slidingWindow(Image, featureExtractionFunc, validationFunc)
 
+
+
 % The default Options
 defaultoptions=struct('ScaleUpdate',1/1.2,'Resize',true,'Verbose',true);
 

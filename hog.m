@@ -1,8 +1,8 @@
 function [features] = hog(Images)
 
-features = zeros(size(Images,4), 7524);
+features = zeros(size(Images,3), 7524);
 
-for i=1:size(Images, 4)
-    features(i,:) =  extractHOGFeatures(Images(:,:,:,i));
+for i=1:size(Images, 3)
+    features(i,:) =  extractHOGFeatures(Images(:,:,i));
 end
      

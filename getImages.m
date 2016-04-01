@@ -14,7 +14,7 @@ for i=1:n
        close(hackyFig);
    end
    
-   Images(:,:,:,i) = img;
+   Images(:,:,:,i) = uint8(img);
 end
 
 end
