@@ -1,4 +1,4 @@
-function [model, loss] = SVMTraining(features, labels)
+function [model] = SVMTraining(features, labels)
 
 %SVM software requires labels -1 or 1 for the binary problem
 labels(labels==0)=-1;
@@ -8,8 +8,3 @@ model = fitcsvm(features, labels,'KernelFunction','linear','ClassNames',[-1,1], 
 
 % Wrap so posterior probablities are returned in score.
 model = fitSVMPosterior(model);
-
-% Cross validate the model.
-disp('Cross validation.');
-cvModel = crossval(model);
-loss = kfoldLoss(cvModel);

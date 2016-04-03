@@ -1,4 +1,4 @@
-function [ tPos, tNeg, fPos, fNeg ] = main(FEOptions, COptions, resultsFolder)
+function [ tPos, tNeg, fPos, fNeg ] = main(FEOptions, COptions, crossVal, resultsFolder)
 % Call like "main({'raw'}, {'kNN'});" in the cmd window... Don't ask about
 % the syntax.
 
@@ -18,7 +18,7 @@ disp('Processing images.');
 ProcessedTrainingImages = preProcess(TrainingImages);
 
 save([resultsFolder 'TrainingImages.mat'], 'TrainingImages', 'TrainingLabels', 'ProcessedTrainingImages');
-
+Loss = 'N/A';
 
 %% Training
 disp('Training.');
@@ -50,7 +50,7 @@ save([resultsFolder 'TrainingFeatures.mat'], 'TrainingFeatures');
 classifierMethod = COptions(1);
 switch classifierMethod{:}
     
-    case 'kNN'
+    case 'knn'
         %Parse the k from the input if available.
         if(size(COptions, 2) > 1)
             k = COptions(2);
@@ -60,26 +60,38 @@ switch classifierMethod{:}
         end
         
         Model = TrainingFeatures;
-        disp('Cross validation.');
-        cvModel = fitcknn(TrainingFeatures, TrainingLabels, 'CrossVal', 'on', 'NumNeighbors', k); 
-        Loss = kfoldLoss(cvModel);
         
+        if(crossVal)
+            disp('Cross validation.');
+            cvModel = fitcknn(TrainingFeatures, TrainingLabels, 'CrossVal', 'on', 'NumNeighbors', k); 
+            Loss = kfoldLoss(cvModel);
+        end
+             
         validationFunc = @(X) KNNTest(Model, TrainingLabels, X, k);
-        nmsThreshold = 500;
     
     case 'svm'
-        [Model, Loss] = SVMTraining(TrainingFeatures, TrainingLabels);
+        Model = SVMTraining(TrainingFeatures, TrainingLabels);
         validationFunc = @(X) SVMTesting(Model, X);
-        nmsThreshold = 100;
+        
+        if(crossVal)
+            disp('Cross validation.');
+            cvModel = crossval(Model);
+            Loss = kfoldLoss(cvModel);
+        end
         
     case 'neural'
-        [Model, Loss] = neuralNetTraining(TrainingFeatures, TrainingLabels);
+        Model = neuralNetTraining(TrainingFeatures, TrainingLabels, true);
         validationFunc = @(X) neuralNetTest(Model, X);
-        nmsThreshold = 100;
-
+        
+        if(crossVal)
+            disp('Cross validation.');
+            predFunc = @(XTRAIN,ytrain,XTEST) fullNet(XTRAIN,ytrain,XTEST);
+            Loss = crossval('mse',TrainingFeatures,TrainingLabels,'Predfun', predFunc);
+        end
+end
 disp(['Loss: ' num2str(Loss)]);
 
-save([resultsFolder 'Model.mat'], 'Model', 'nmsThreshold', 'Loss');
+save([resultsFolder 'Model.mat'], 'Model', 'Loss');
 
 %% Testing
 % Get the test set consisting of images of a street.
@@ -107,7 +119,7 @@ for i=1:size(ProcessedTestImages,3)
     [Objects, windowCount] = slidingWindow(ProcessedTestImages(:,:,i), featureExtractionFunc, validationFunc);
     
     Objects = centerOrigin(Objects);
-    %Objects = suppressNonMaxima(Objects, nmsThreshold);
+    Objects = suppressNonMaxima(Objects, 100);
     [ tPos(i), tNeg(i), fPos(i), fNeg(i) ] = calculateBaseMetrics(Objects, TestAnswers{i}, windowCount, 10);
     
     % Get the correct answers and add to the list of objects for display.

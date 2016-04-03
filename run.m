@@ -13,10 +13,11 @@ mkdir([resultsFolder 'images\']);
 % Configure the options.
 FEOptions = {'hog'};
 COptions = {'neural'};
+crossVal = false;
 save([resultsFolder 'Options.mat'], 'FEOptions', 'COptions');
 
 % Run the full training / testing.
-[ tPos, tNeg, fPos, fNeg ] = main( FEOptions, COptions, resultsFolder);
+[ tPos, tNeg, fPos, fNeg ] = main( FEOptions, COptions, crossVal, resultsFolder);
 
 % Sum the resulting vectors.
 TP = sum(tPos);
@@ -50,7 +51,7 @@ videoOut.Quality = 100;
 
 open(videoOut);
 for i=1:size(videoFrames, 4)
-    writeVideo(videoOut, videoFrames(:,:,:,i));
+    writeVideo(videoOut, videoFrames(:,:,i));
 end
 close(videoOut);
 
